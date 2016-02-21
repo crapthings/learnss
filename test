@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# learn shell script
+
+PROJECTNAME=$1
+
+mkdir -p $PROJECTNAME/{collections,lib,public,client,server}
