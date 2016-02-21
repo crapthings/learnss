@@ -1,6 +1,36 @@
 #!/usr/bin/env bash
 # learn shell script
 
+clear
+
+echo -e "create new project into ${PWD}"
+
 PROJECTNAME=$1
 
-mkdir -p $PROJECTNAME/{collections,lib,public,client,server}
+while [[ -z $PROJECTNAME ]]; do
+	echo -n "project name: "
+	read PROJECTNAME
+done
+
+if [[ -d $PROJECTNAME ]]; then
+	echo "$PROJECTNAME is exist..."
+	exit 1
+fi
+
+meteor create $PROJECTNAME > /dev/null
+echo "project $PROJECTNAME created"
+cd $PROJECTNAME
+echo "adding some packages..."
+meteor add coffeescript > /dev/null
+echo "coffeescript added"
+meteor add mquandalle:jade > /dev/null
+echo "jade added"
+meteor add mquandalle:stylus > /dev/null
+echo "stylus added"
+cd ..
+
+rm $PROJECTNAME/*
+
+mkdir -p $PROJECTNAME/{client,client/compatibility,server,public,collections,lib}
+
+echo "done!"
