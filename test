@@ -19,18 +19,122 @@ fi
 
 meteor create $PROJECTNAME > /dev/null
 echo "project $PROJECTNAME created"
+
 cd $PROJECTNAME
+
 echo "adding some packages..."
+
+meteor add accounts-password > /dev/null
+echo "accounts password added"
+
 meteor add coffeescript > /dev/null
 echo "coffeescript added"
+
 meteor add mquandalle:jade > /dev/null
 echo "jade added"
+
 meteor add mquandalle:stylus > /dev/null
 echo "stylus added"
+
+meteor add stevezhu:lodash > /dev/null
+echo "lodash added"
+
+meteor add momentjs:moment > /dev/null
+echo "moment added"
+
+meteor add iron:router > /dev/null
+echo "iron router added"
+
+meteor add zimme:active-route > /dev/null
+echo "active route added"
+
+meteor add matb33:collection-hooks > /dev/null
+echo "collection hooks added"
+
+meteor add dburles:collection-helpers > /dev/null
+echo "collection helpers added"
+
+meteor add aldeed:collection2 > /dev/null
+echo "collection2 added"
+
+meteor add aldeed:autoform > /dev/null
+echo "autoform added"
+
 cd ..
 
 rm $PROJECTNAME/*
 
-mkdir -p $PROJECTNAME/{client,client/compatibility,server,public,collections,lib}
+mkdir -p $PROJECTNAME/{client,server,public,collections,lib}
+
+mkdir -p $PROJECTNAME/{client/lib,client/compatibility,client/styles}
+
+mkdir -p $PROJECTNAME/{client/templates,client/templates/ui,client/templates/home}
+
+mkdir -p $PROJECTNAME/{client/templates,client/templates/login}
+
+# head template
+cat << _boilerplate_ > $PROJECTNAME/client/head.jade
+head
+	meta(charset='UTF-8')
+	title $PROJECTNAME
+_boilerplate_
+
+# ui template
+cat << _boilerplate_ > $PROJECTNAME/client/templates/ui/layout.jade
+template(name='layout')
+	+yield
+_boilerplate_
+
+# login template
+cat << _boilerplate_ > $PROJECTNAME/client/templates/login/template.jade
+template(name='login')
+	form
+		input(type='text' name='username' value='demo')
+		input(type='password' name='password' value='demo')
+		input(type='submit' value='login')
+_boilerplate_
+
+# login event
+cat << '_boilerplate_' > $PROJECTNAME/client/templates/login/template.coffee
+Template.login.events
+	'submit form': (e, t) ->
+		do e.preventDefault
+		$username = do ($ t.find '[name="username"]').val
+		$password = do ($ t.find '[name="password"]').val
+		Meteor.loginWithPassword $username, $password, (err) ->
+			unless err
+				Router.go 'home'
+_boilerplate_
+
+# home template
+cat << _boilerplate_ > $PROJECTNAME/client/templates/home/template.jade
+template(name='home')
+	h1 home template
+_boilerplate_
+
+# home router
+cat << _boilerplate_ > $PROJECTNAME/client/templates/home/router.coffee
+Router.route '/', ->
+	@render 'home'
+,
+	name: 'home'
+_boilerplate_
+
+# random data
+cat << _boilerplate_ > $PROJECTNAME/server/fixtures.coffee
+# feed dummy data
+
+Meteor.startup ->
+	
+	unless Meteor.users.findOne { username: 'admin' }
+		Accountes.createUser
+			username: 'admin'
+			password: 'admin'
+
+	unless Meteor.users.findOne { username: 'demo' }
+		Accountes.createUser
+			username: 'demo'
+			password: 'demo'
+_boilerplate_
 
 echo "done!"
