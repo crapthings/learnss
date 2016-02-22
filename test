@@ -64,6 +64,8 @@ cd ..
 
 rm $PROJECTNAME/*
 
+# boilerplate project
+
 mkdir -p $PROJECTNAME/{client,server,public,collections,lib}
 
 mkdir -p $PROJECTNAME/{client/lib,client/compatibility,client/styles}
@@ -73,6 +75,7 @@ mkdir -p $PROJECTNAME/{client/templates,client/templates/ui,client/templates/hom
 mkdir -p $PROJECTNAME/{client/templates,client/templates/login}
 
 # head template
+
 cat << _boilerplate_ > $PROJECTNAME/client/head.jade
 head
 	meta(charset='UTF-8')
@@ -80,12 +83,14 @@ head
 _boilerplate_
 
 # ui template
+
 cat << _boilerplate_ > $PROJECTNAME/client/templates/ui/layout.jade
 template(name='layout')
 	+yield
 _boilerplate_
 
 # login template
+
 cat << _boilerplate_ > $PROJECTNAME/client/templates/login/template.jade
 template(name='login')
 	form
@@ -95,6 +100,7 @@ template(name='login')
 _boilerplate_
 
 # login event
+
 cat << '_boilerplate_' > $PROJECTNAME/client/templates/login/template.coffee
 Template.login.events
 	'submit form': (e, t) ->
@@ -107,12 +113,14 @@ Template.login.events
 _boilerplate_
 
 # home template
+
 cat << _boilerplate_ > $PROJECTNAME/client/templates/home/template.jade
 template(name='home')
 	h1 home template
 _boilerplate_
 
 # home router
+
 cat << _boilerplate_ > $PROJECTNAME/client/templates/home/router.coffee
 Router.route '/', ->
 	@render 'home'
@@ -121,18 +129,19 @@ Router.route '/', ->
 _boilerplate_
 
 # random data
+
 cat << _boilerplate_ > $PROJECTNAME/server/fixtures.coffee
 # feed dummy data
 
 Meteor.startup ->
 	
 	unless Meteor.users.findOne { username: 'admin' }
-		Accountes.createUser
+		Accounts.createUser
 			username: 'admin'
 			password: 'admin'
 
 	unless Meteor.users.findOne { username: 'demo' }
-		Accountes.createUser
+		Accounts.createUser
 			username: 'demo'
 			password: 'demo'
 _boilerplate_
