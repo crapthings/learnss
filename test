@@ -82,6 +82,22 @@ head
 	title $PROJECTNAME
 _boilerplate_
 
+# router config
+
+cat << '_boilerplate_' > $PROJECTNAME/client/router.coffee
+Router.configure
+	layoutTemplate: 'layout'
+
+Router.onBeforeAction ->
+	unless Meteor.userId()
+		@layout 'blank'
+		@render 'login'
+	else
+		do @next
+
+_boilerplate_
+
+
 # ui template
 
 cat << _boilerplate_ > $PROJECTNAME/client/templates/ui/layout.jade
