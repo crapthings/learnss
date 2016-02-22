@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+create () {
+	mkdir -p $1
+}
+
+case "$1" in
+	"create")
+		create $2
+	;;
+	*)
+		echo "error: unknown command"
+	;;
+esac

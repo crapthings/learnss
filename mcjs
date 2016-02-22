@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # learn shell script
 
+create () {
+
 clear
 
 echo -e "create new project into ${PWD}"
 
-PROJECTNAME=$1
+local PROJECTNAME=$1
 
 while [[ -z $PROJECTNAME ]]; do
 	echo -n "project name: "
@@ -17,52 +19,52 @@ if [[ -d $PROJECTNAME ]]; then
 	exit 1
 fi
 
-meteor create $PROJECTNAME > /dev/null
-echo "project $PROJECTNAME created"
+# meteor create $PROJECTNAME > /dev/null
+# echo "project $PROJECTNAME created"
 
-cd $PROJECTNAME
+# cd $PROJECTNAME
 
-echo "adding some packages..."
+# echo "adding some packages..."
 
-meteor add accounts-password > /dev/null
-echo "accounts password added"
+# meteor add accounts-password > /dev/null
+# echo "accounts password added"
 
-meteor add coffeescript > /dev/null
-echo "coffeescript added"
+# meteor add coffeescript > /dev/null
+# echo "coffeescript added"
 
-meteor add mquandalle:jade > /dev/null
-echo "jade added"
+# meteor add mquandalle:jade > /dev/null
+# echo "jade added"
 
-meteor add mquandalle:stylus > /dev/null
-echo "stylus added"
+# meteor add mquandalle:stylus > /dev/null
+# echo "stylus added"
 
-meteor add stevezhu:lodash > /dev/null
-echo "lodash added"
+# meteor add stevezhu:lodash > /dev/null
+# echo "lodash added"
 
-meteor add momentjs:moment > /dev/null
-echo "moment added"
+# meteor add momentjs:moment > /dev/null
+# echo "moment added"
 
-meteor add iron:router > /dev/null
-echo "iron router added"
+# meteor add iron:router > /dev/null
+# echo "iron router added"
 
-meteor add zimme:active-route > /dev/null
-echo "active route added"
+# meteor add zimme:active-route > /dev/null
+# echo "active route added"
 
-meteor add matb33:collection-hooks > /dev/null
-echo "collection hooks added"
+# meteor add matb33:collection-hooks > /dev/null
+# echo "collection hooks added"
 
-meteor add dburles:collection-helpers > /dev/null
-echo "collection helpers added"
+# meteor add dburles:collection-helpers > /dev/null
+# echo "collection helpers added"
 
-meteor add aldeed:collection2 > /dev/null
-echo "collection2 added"
+# meteor add aldeed:collection2 > /dev/null
+# echo "collection2 added"
 
-meteor add aldeed:autoform > /dev/null
-echo "autoform added"
+# meteor add aldeed:autoform > /dev/null
+# echo "autoform added"
 
-cd ..
+# cd ..
 
-rm $PROJECTNAME/*
+# rm $PROJECTNAME/*
 
 # boilerplate project
 
@@ -97,11 +99,15 @@ Router.onBeforeAction ->
 
 _boilerplate_
 
-
 # ui template
 
 cat << _boilerplate_ > $PROJECTNAME/client/templates/ui/layout.jade
 template(name='layout')
+	+yield
+_boilerplate_
+
+cat << _boilerplate_ > $PROJECTNAME/client/templates/ui/blank.jade
+template(name='blank')
 	+yield
 _boilerplate_
 
@@ -150,7 +156,7 @@ cat << _boilerplate_ > $PROJECTNAME/server/fixtures.coffee
 # feed dummy data
 
 Meteor.startup ->
-	
+
 	unless Meteor.users.findOne { username: 'admin' }
 		Accounts.createUser
 			username: 'admin'
@@ -163,3 +169,12 @@ Meteor.startup ->
 _boilerplate_
 
 echo "done!"
+
+}
+
+#
+
+case "$1" in
+	"create") create $2;;
+	*) echo "error: unknown command.";;
+esac
