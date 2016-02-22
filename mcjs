@@ -19,52 +19,52 @@ if [[ -d $PROJECTNAME ]]; then
 	exit 1
 fi
 
-# meteor create $PROJECTNAME > /dev/null
-# echo "project $PROJECTNAME created"
+meteor create $PROJECTNAME > /dev/null
+echo "project $PROJECTNAME created"
 
-# cd $PROJECTNAME
+cd $PROJECTNAME
 
-# echo "adding some packages..."
+echo "adding some packages..."
 
-# meteor add accounts-password > /dev/null
-# echo "accounts password added"
+meteor add accounts-password > /dev/null
+echo "accounts password added"
 
-# meteor add coffeescript > /dev/null
-# echo "coffeescript added"
+meteor add coffeescript > /dev/null
+echo "coffeescript added"
 
-# meteor add mquandalle:jade > /dev/null
-# echo "jade added"
+meteor add mquandalle:jade > /dev/null
+echo "jade added"
 
-# meteor add mquandalle:stylus > /dev/null
-# echo "stylus added"
+meteor add mquandalle:stylus > /dev/null
+echo "stylus added"
 
-# meteor add stevezhu:lodash > /dev/null
-# echo "lodash added"
+meteor add stevezhu:lodash > /dev/null
+echo "lodash added"
 
-# meteor add momentjs:moment > /dev/null
-# echo "moment added"
+meteor add momentjs:moment > /dev/null
+echo "moment added"
 
-# meteor add iron:router > /dev/null
-# echo "iron router added"
+meteor add iron:router > /dev/null
+echo "iron router added"
 
-# meteor add zimme:active-route > /dev/null
-# echo "active route added"
+meteor add zimme:active-route > /dev/null
+echo "active route added"
 
-# meteor add matb33:collection-hooks > /dev/null
-# echo "collection hooks added"
+meteor add matb33:collection-hooks > /dev/null
+echo "collection hooks added"
 
-# meteor add dburles:collection-helpers > /dev/null
-# echo "collection helpers added"
+meteor add dburles:collection-helpers > /dev/null
+echo "collection helpers added"
 
-# meteor add aldeed:collection2 > /dev/null
-# echo "collection2 added"
+meteor add aldeed:collection2 > /dev/null
+echo "collection2 added"
 
-# meteor add aldeed:autoform > /dev/null
-# echo "autoform added"
+meteor add aldeed:autoform > /dev/null
+echo "autoform added"
 
-# cd ..
+cd ..
 
-# rm $PROJECTNAME/*
+rm $PROJECTNAME/*
 
 # boilerplate project
 
@@ -172,9 +172,19 @@ echo "done!"
 
 }
 
+add () {
+if [[ -d .meteor ]]; then
+	echo 1
+else
+	echo "you're not in a meteor project"
+	exit 1
+fi
+}
+
 #
 
 case "$1" in
 	"create") create $2;;
+	"add") add $2;;
 	*) echo "error: unknown command.";;
 esac
