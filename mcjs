@@ -32,7 +32,7 @@ echo "accounts password added"
 meteor add coffeescript > /dev/null
 echo "coffeescript added"
 
-meteor add mquandalle:jade > /dev/null
+meteor add dalgard:jade > /dev/null
 echo "jade added"
 
 meteor add mquandalle:stylus > /dev/null
@@ -61,6 +61,9 @@ echo "collection2 added"
 
 meteor add aldeed:autoform > /dev/null
 echo "autoform added"
+
+meteor add manuel:viewmodel > /dev/null
+echo "viewmodel added"
 
 cd ..
 
