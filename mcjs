@@ -26,43 +26,35 @@ cd $PROJECTNAME
 
 echo "adding some packages..."
 
-meteor add accounts-password > /dev/null
+cat << _packages_ >> .meteor/packages
+
+accounts-password
+coffeescript
+dalgard:jade
+mquandalle:stylus
+stevezhu:lodash
+momentjs:moment
+iron:router
+zimme:active-route
+matb33:collection-hooks
+dburles:collection-helpers
+aldeed:collection2
+aldeed:autoform
+manuel:viewmodel
+_packages_
+
 echo "accounts password added"
-
-meteor add coffeescript > /dev/null
 echo "coffeescript added"
-
-meteor add dalgard:jade > /dev/null
 echo "jade added"
-
-meteor add mquandalle:stylus > /dev/null
 echo "stylus added"
-
-meteor add stevezhu:lodash > /dev/null
 echo "lodash added"
-
-meteor add momentjs:moment > /dev/null
 echo "moment added"
-
-meteor add iron:router > /dev/null
 echo "iron router added"
-
-meteor add zimme:active-route > /dev/null
 echo "active route added"
-
-meteor add matb33:collection-hooks > /dev/null
 echo "collection hooks added"
-
-meteor add dburles:collection-helpers > /dev/null
 echo "collection helpers added"
-
-meteor add aldeed:collection2 > /dev/null
 echo "collection2 added"
-
-meteor add aldeed:autoform > /dev/null
 echo "autoform added"
-
-meteor add manuel:viewmodel > /dev/null
 echo "viewmodel added"
 
 cd ..
@@ -78,6 +70,12 @@ mkdir -p $PROJECTNAME/{client/lib,client/compatibility,client/styles}
 mkdir -p $PROJECTNAME/{client/templates,client/templates/ui,client/templates/home}
 
 mkdir -p $PROJECTNAME/{client/templates,client/templates/login}
+
+# users collection
+
+cat << _boilerplate_ > $PROJECTNAME/collections/users.coffee
+
+_boilerplate_
 
 # head template
 
@@ -106,12 +104,27 @@ _boilerplate_
 
 cat << _boilerplate_ > $PROJECTNAME/client/templates/ui/layout.jade
 template(name='layout')
+	+topnav
 	+yield
 _boilerplate_
 
 cat << _boilerplate_ > $PROJECTNAME/client/templates/ui/blank.jade
 template(name='blank')
 	+yield
+_boilerplate_
+
+cat << _boilerplate_ > $PROJECTNAME/client/templates/ui/debugnav.jade
+template(name='debugnav')
+	ul
+		li
+			a(href='/') home
+_boilerplate_
+
+cat << _boilerplate_ > $PROJECTNAME/client/templates/ui/topnav.jade
+template(name='topnav')
+	ul
+		li
+			a(href='#' onclick='Meteor.logout();') Logout
 _boilerplate_
 
 # login template
@@ -141,7 +154,7 @@ _boilerplate_
 
 cat << _boilerplate_ > $PROJECTNAME/client/templates/home/template.jade
 template(name='home')
-	h1 home template
+	h1 home
 _boilerplate_
 
 # home router
@@ -173,21 +186,104 @@ _boilerplate_
 
 echo "done!"
 
+cd $PROJECTNAME
+
+ls
+
 }
 
-add () {
-if [[ -d .meteor ]]; then
-	echo 1
+router () {
+
+local PROJECTPATH=$PWD
+local TEMPLATESPATH=$PROJECTPATH/client/templates
+local ROUTERNAME=$1
+
+if [[ -d $PWD/.meteor || -z $ROUTERNAME ]]; then
+
+if [[ -d $TEMPLATESPATH/$ROUTERNAME ]]; then
+	echo "$ROUTERNAME router exist"
+	exit 1
+fi
+
+mkdir -p $TEMPLATESPATH/$ROUTERNAME
+cd $TEMPLATESPATH/$ROUTERNAME
+touch router.coffee template.jade template.coffee
+
+# router.coffee
+
+cat << _boilerplate_ > $TEMPLATESPATH/$ROUTERNAME/router.coffee
+Router.route '/$ROUTERNAME', ->
+	@render 'users'
+,
+	name: '$ROUTERNAME'
+_boilerplate_
+
+# template.jade
+
+cat << _boilerplate_ > $TEMPLATESPATH/$ROUTERNAME/template.jade
+template(name='$ROUTERNAME')
+	h1 $ROUTERNAME
+_boilerplate_
+
+# template.coffee
+
+cat << _boilerplate_ > $TEMPLATESPATH/$ROUTERNAME/template.coffee
+Template.$ROUTERNAME.viewmodel({})
+_boilerplate_
+
+# append router to debug nav
+
+cat << _boilerplate_ >> $TEMPLATESPATH/ui/debugnav.jade
+		li
+			a(href='/$ROUTERNAME') $ROUTERNAME
+_boilerplate_
+
+echo "$ROUTERNAME router added"
+
 else
 	echo "you're not in a meteor project"
 	exit 1
 fi
+
+}
+
+collection () {
+
+local PROJECTPATH=$PWD
+local COLLECTIONPATH=$PROJECTPATH/collections
+local COLLECTIONNAME=$1
+
+local COLLECTIONNAMECAP=${COLLECTIONNAME^}
+
+if [[ -d $PWD/.meteor || -z $COLLECTIONNAME ]]; then
+
+if [[ -d $COLLECTIONPATH/$COLLECTIONNAME ]]; then
+	echo "$COLLECTIONNAME collection exist"
+	exit 1
+fi
+
+cd $COLLECTIONPATH
+
+# collection.coffee
+
+cat << _boilerplate_ > $COLLECTIONPATH/$COLLECTIONNAME.coffee
+@${COLLECTIONNAMECAP} = new Mongo.Collection '$COLLECTIONNAME'
+_boilerplate_
+
+echo "$COLLECTIONNAME collection added"
+
+else
+	echo "you're not in a meteor project"
+	exit 1
+fi
+
 }
 
 #
 
 case "$1" in
 	"create") create $2;;
-	"add") add $2;;
+	"router") router $2;;
+	"collection") collection $2;;
 	*) echo "error: unknown command.";;
 esac
